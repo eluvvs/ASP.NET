@@ -3,6 +3,14 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+// Session — pro sledování přihlášení
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -12,6 +20,7 @@ if (!app.Environment.IsDevelopment())
 }
 app.UseRouting();
 
+app.UseSession();
 app.UseAuthorization();
 
 // Map /pricing.html to the MVC action directly so the URL works as-is

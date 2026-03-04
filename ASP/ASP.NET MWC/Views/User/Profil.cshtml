@@ -1,0 +1,26 @@
+@{
+    ViewData["Title"] = "Profil";
+}
+
+<div class="user-page">
+    <div class="profil-header">
+        <img src="~/images/user-login.png" alt="Profilový obrázek" class="profil-avatar" />
+        <h1>Můj profil</h1>
+    </div>
+    <p>Vítejte! Jste úspěšně přihlášeni.</p>
+
+    <div class="profil-info">
+        <div class="profil-polozka">
+            <strong>Jméno:</strong> @ViewBag.Jmeno
+        </div>
+        <div class="profil-polozka">
+            <strong>E-mail:</strong> @ViewBag.Email
+        </div>
+        <div class="profil-polozka">
+            <strong>Členem od:</strong> 4. března 2026
+        </div>
+    </div>
+
+    <a href="/User/Odhlasit" class="btn-odhlasit">Odhlásit se</a>
+    <a href="/" class="btn-zpet">← Zpět na hlavní stránku</a>
+</div>

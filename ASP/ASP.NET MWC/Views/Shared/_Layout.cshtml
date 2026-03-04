@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="cs">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -11,6 +11,22 @@
     <link rel="stylesheet" href="~/ASP.NET_MWC.styles.css" asp-append-version="true" />
 </head>
 <body>
+    <!-- Ikona uživatele — top right na každé stránce -->
+    <div class="user-icon-wrapper">
+        @if (Context.Session.GetString("Prihlasen") == "true")
+        {
+            <a href="/User/Profil" class="user-icon user-icon--logged-in" title="Můj profil">
+                <img src="~/images/user-login.png" alt="Profil" />
+            </a>
+        }
+        else
+        {
+            <a href="/User/Login" class="user-icon" title="Přihlásit se">
+                <img src="~/images/user-login.png" alt="Přihlásit se" />
+            </a>
+        }
+    </div>
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()

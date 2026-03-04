@@ -1,0 +1,29 @@
+@{
+    ViewData["Title"] = "Registrace";
+}
+
+<div class="user-page">
+    <h1>Registrace</h1>
+    <p>Vytvořte si nový účet.</p>
+
+    <form method="post" asp-controller="User" asp-action="Register">
+        <div class="form-group">
+            <label for="jmeno">Jméno</label>
+            <input type="text" id="jmeno" name="jmeno" placeholder="Zadejte své jméno" required />
+        </div>
+
+        <div class="form-group">
+            <label for="email">E-mail</label>
+            <input type="email" id="email" name="email" placeholder="vas@email.cz" required />
+        </div>
+
+        <div class="form-group">
+            <label for="heslo">Heslo</label>
+            <input type="password" id="heslo" name="heslo" placeholder="Zadejte heslo" required />
+        </div>
+
+        <button type="submit">Zaregistrovat se</button>
+    </form>
+
+    <p class="link">Už máte účet? <a href="/User/Login">Přihlaste se</a></p>
+</div>
