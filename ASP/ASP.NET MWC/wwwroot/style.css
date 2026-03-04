@@ -608,3 +608,268 @@ body.fancy-ui .fancy-toggle__label {
 .user-page-back:hover {
   color: #eee;
 }
+
+/* ===================================================================
+   INSANE APPLE-STYLE ANIMATIONS (ONLY IN FANCY UI)
+   =================================================================== */
+
+/* Apply dynamic mouse parallax to the background */
+body.fancy-ui::before {
+  transform: scale(1.05) translate(var(--mouse-x, 0), var(--mouse-y, 0));
+  transition: transform 0.1s linear;
+}
+
+/* Base prepared state for scroll animation */
+body.fancy-ui .anim-prepare {
+  opacity: 0;
+  transform: translateY(60px) scale(0.95) rotateX(10deg);
+  transition: all 0.8s cubic-bezier(0.19, 1, 0.22, 1);
+  will-change: transform, opacity;
+}
+
+/* In-view state */
+body.fancy-ui .anim-prepare.in-view {
+  opacity: 1;
+  transform: translateY(0) scale(1) rotateX(0deg);
+}
+
+/* Stagger list items and table rows for a cascading reveal */
+body.fancy-ui li.anim-prepare:nth-child(1) {
+  transition-delay: 0.05s;
+}
+
+body.fancy-ui li.anim-prepare:nth-child(2) {
+  transition-delay: 0.10s;
+}
+
+body.fancy-ui li.anim-prepare:nth-child(3) {
+  transition-delay: 0.15s;
+}
+
+body.fancy-ui li.anim-prepare:nth-child(4) {
+  transition-delay: 0.20s;
+}
+
+body.fancy-ui li.anim-prepare:nth-child(5) {
+  transition-delay: 0.25s;
+}
+
+body.fancy-ui tr.anim-prepare:nth-child(even) {
+  transition-delay: 0.10s;
+}
+
+body.fancy-ui tr.anim-prepare:nth-child(odd) {
+  transition-delay: 0.05s;
+}
+
+body.fancy-ui .figure-row>div.anim-prepare:nth-child(2) {
+  transition-delay: 0.2s;
+}
+
+/* Insane Hover Effects for Sections */
+body.fancy-ui .content section {
+  position: relative;
+  border-radius: 12px;
+  padding: 20px;
+  margin: -20px;
+  /* Offset padding */
+  transition: background 0.4s ease, transform 0.4s cubic-bezier(0.19, 1, 0.22, 1), box-shadow 0.4s ease;
+}
+
+body.fancy-ui .content section:hover {
+  background: rgba(255, 255, 255, 0.03);
+  transform: scale(1.02) translateY(-5px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  z-index: 10;
+}
+
+/* Glitch / Chromatic Aberration on headings on hover */
+body.fancy-ui .content h2 {
+  transition: text-shadow 0.3s ease;
+}
+
+body.fancy-ui .content section:hover h2,
+body.fancy-ui .user-page:hover h1 {
+  text-shadow:
+    3px 0px 0px rgba(238, 77, 67, 0.5),
+    -3px 0px 0px rgba(100, 140, 220, 0.5);
+  animation: glitch-jitter 0.2s infinite alternate;
+}
+
+@keyframes glitch-jitter {
+  0% {
+    transform: skewX(0deg);
+  }
+
+  100% {
+    transform: skewX(1deg);
+  }
+}
+
+/* User Form Supercharged 3D Tilt */
+body.fancy-ui .user-page {
+  position: relative;
+  box-shadow: 0 10px 50px rgba(0, 0, 0, 0.5);
+  overflow: visible;
+  /* Important: allow 3D elements to stick out */
+  transform: perspective(1200px) rotateX(0deg) rotateY(0deg);
+  transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.6s ease;
+  transform-style: preserve-3d;
+}
+
+/* Mouse 3D Tilt Active */
+body.fancy-ui .user-page.is-tilting {
+  transform: perspective(1200px) rotateX(var(--rot-x, 0deg)) rotateY(var(--rot-y, 0deg)) scale3d(1.02, 1.02, 1.02) !important;
+  transition: transform 0.1s linear, box-shadow 0.4s ease;
+  /* Fast transition so it feels responsive like a real object */
+  box-shadow:
+    -10px 30px 60px rgba(0, 0, 0, 0.6),
+    inset 0 1px 1px rgba(255, 255, 255, 0.1);
+}
+
+body.fancy-ui .user-page:hover {
+  transform: scale(1.02) translateY(-4px);
+  /* Fallback if JS hasn't picked up */
+}
+
+/* 3D Content popping out of the screen! */
+body.fancy-ui .user-page.is-tilting>* {
+  transform: translateZ(40px);
+  transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+body.fancy-ui .user-page.is-tilting h1 {
+  transform: translateZ(60px);
+  text-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+}
+
+body.fancy-ui .user-page.is-tilting button {
+  transform: translateZ(50px);
+  box-shadow: 0 15px 25px rgba(0, 0, 0, 0.4);
+}
+
+/* Animated tracing border inside the login form clipped by radar container */
+body.fancy-ui .user-page-radar {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  overflow: hidden;
+  z-index: 0;
+  transform: translateZ(-1px);
+  /* Keep border flat on the back */
+}
+
+body.fancy-ui .user-page-radar::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: conic-gradient(from 0deg, transparent 70%, rgba(var(--glow-color), 0.8) 100%);
+  animation: rotateBorder 4s linear infinite;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+body.fancy-ui .user-page:hover .user-page-radar::before {
+  opacity: 1;
+}
+
+/* Inner mask for the form background to leave the border visible */
+body.fancy-ui .user-page-radar::after {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  background: rgba(15, 20, 32, 0.95);
+  border-radius: 6px;
+}
+
+/* Since the ::after mask covers the content, we need everything inside .user-page to have a higher z-index */
+body.fancy-ui .user-page>* {
+  position: relative;
+  z-index: 2;
+}
+
+body.fancy-ui .user-page>.user-page-radar {
+  position: absolute;
+  z-index: 0;
+}
+
+@keyframes rotateBorder {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Inputs super smooth focus */
+body.fancy-ui .form-group input {
+  transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+body.fancy-ui .form-group input:focus {
+  transform: scale(1.02) translateZ(30px) !important;
+  box-shadow: 0 10px 25px rgba(var(--glow-color), 0.2);
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(var(--glow-color), 0.8);
+}
+
+/* Interactive Cursor-Tracking Magnetic Button Hover */
+body.fancy-ui .user-page button,
+body.fancy-ui .btn-odhlasit {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+  z-index: 2;
+  background: rgba(255, 255, 255, 0.05);
+  /* Transparent to let gradient show through */
+}
+
+/* Base interactive spotlight gradient controlled by JS --x and --y */
+body.fancy-ui .user-page button::before,
+body.fancy-ui .btn-odhlasit::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(80px circle at var(--x, 50%) var(--y, 50%),
+      rgba(255, 255, 255, 0.3),
+      transparent 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: -1;
+}
+
+/* Underneath colour */
+body.fancy-ui .user-page button::after,
+body.fancy-ui .btn-odhlasit::after {
+  content: '';
+  position: absolute;
+  inset: 1px;
+  background: #3a6fd8;
+  /* Primary button colour */
+  border-radius: inherit;
+  z-index: -2;
+}
+
+body.fancy-ui .btn-odhlasit::after {
+  background: #c0392b;
+  /* Logout button colour */
+}
+
+body.fancy-ui .user-page button:hover,
+body.fancy-ui .btn-odhlasit:hover {
+  transform: scale(1.05);
+  /* JS tilt will handle translateZ */
+  box-shadow: 0 10px 30px rgba(var(--glow-color), 0.4);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+body.fancy-ui .user-page button:hover::before,
+body.fancy-ui .btn-odhlasit:hover::before {
+  opacity: 1;
+  /* Ignite the interactive cursor tracking torchlight! */
+}

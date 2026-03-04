@@ -166,15 +166,108 @@
 })();
 
 // =============================================
-// 4. Auto back button on .user-page
+// 4. Auto back button on .user-page & radar background
 // =============================================
 (function () {
-  var page = document.querySelector('.user-page');
-  if (!page) return;
+  var pages = document.querySelectorAll('.user-page');
+  pages.forEach(function (page) {
+    // Add inner radar container for clipping the border animation
+    var radar = document.createElement('div');
+    radar.className = 'user-page-radar';
+    page.insertBefore(radar, page.firstChild);
 
-  var back = document.createElement('a');
-  back.href = '/';
-  back.className = 'user-page-back';
-  back.textContent = '← Zpět';
-  page.insertBefore(back, page.firstChild);
+    // Add back button
+    var back = document.createElement('a');
+    back.href = '/';
+    back.className = 'user-page-back';
+    back.textContent = '← Zpět';
+    page.insertBefore(back, page.firstChild);
+  });
+})();
+
+// =============================================
+// 5. INSANE Apple-style Animations (Scroll & Parallax) ! ONLY FANCY UI
+// =============================================
+(function () {
+  // 1. Scroll animations (Intersection Observer)
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      // Add 'in-view' when scrolling into screen bounds
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in-view');
+      } else {
+        // Remove it so it replays infinitely for ultimate bounciness
+        entry.target.classList.remove('in-view');
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+  // 2. Setup elements & global parallax
+  document.addEventListener('DOMContentLoaded', () => {
+    // Select all components we want to heavily animate
+    const animatedElements = document.querySelectorAll(
+      '.content section, .content h2, .content p, .content li, .figure-row > div, .operator-table tr, .user-page, .profil-info'
+    );
+
+    animatedElements.forEach(el => {
+      // Add base class for CSS hooks
+      el.classList.add('anim-prepare');
+      observer.observe(el);
+    });
+
+    // Handle mouse move for background parallax shifting
+    document.addEventListener('mousemove', (e) => {
+      if (!document.body.classList.contains('fancy-ui')) return;
+
+      // Calculate normalized mouse position (-10px to +10px variance)
+      const moveX = (e.clientX / window.innerWidth - 0.5) * 20;
+      const moveY = (e.clientY / window.innerHeight - 0.5) * 20;
+
+      // Feed to CSS for the background ::before pseudo-element
+      document.body.style.setProperty('--mouse-x', `${-moveX}px`);
+      document.body.style.setProperty('--mouse-y', `${-moveY}px`);
+    });
+
+    // 3. 3D Tilt Effect for User Pages 
+    const userPages = document.querySelectorAll('.user-page');
+    userPages.forEach(page => {
+      page.addEventListener('mousemove', (e) => {
+        if (!document.body.classList.contains('fancy-ui')) return;
+
+        const rect = page.getBoundingClientRect();
+        const x = e.clientX - rect.left; // x position within the element.
+        const y = e.clientY - rect.top;  // y position within the element.
+
+        // Calculate rotation based on cursor position (-5deg to +5deg)
+        const rotX = ((y / rect.height) - 0.5) * -15;
+        const rotY = ((x / rect.width) - 0.5) * 15;
+
+        page.style.setProperty('--rot-x', `${rotX}deg`);
+        page.style.setProperty('--rot-y', `${rotY}deg`);
+        page.classList.add('is-tilting');
+      });
+
+      page.addEventListener('mouseleave', () => {
+        page.style.setProperty('--rot-x', `0deg`);
+        page.style.setProperty('--rot-y', `0deg`);
+        page.classList.remove('is-tilting');
+      });
+    });
+
+    // 4. Cursor Tracking Button Hover Glow
+    const fancyButtons = document.querySelectorAll('.user-page button, .btn-odhlasit');
+    fancyButtons.forEach(btn => {
+      btn.addEventListener('mousemove', (e) => {
+        if (!document.body.classList.contains('fancy-ui')) return;
+
+        const rect = btn.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        btn.style.setProperty('--x', `${x}px`);
+        btn.style.setProperty('--y', `${y}px`);
+      });
+    });
+
+  });
 })();
