@@ -58,12 +58,13 @@
       document.body.classList.remove('fancy-ui');
     }
     checkbox.checked = enabled;
-    try { localStorage.setItem(STORAGE_KEY, enabled ? '1' : '0'); } catch (e) { }
+    try { sessionStorage.setItem(STORAGE_KEY, enabled ? '1' : '0'); } catch (e) { }
   }
 
   // Read stored preference — default OFF
+  // Uses sessionStorage so the toggle resets to OFF when all tabs are closed
   let stored = null;
-  try { stored = localStorage.getItem(STORAGE_KEY); } catch (e) { }
+  try { stored = sessionStorage.getItem(STORAGE_KEY); } catch (e) { }
   setFancy(stored === '1');
 
   checkbox.addEventListener('change', function () {
