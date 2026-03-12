@@ -11,6 +11,11 @@
         <div class="zprava">@TempData["Zprava"]</div>
     }
 
+    @if (ViewBag.Chyba != null)
+    {
+        <div class="zprava" style="background: rgba(231, 76, 60, 0.15); border-color: rgba(231, 76, 60, 0.3); color: #e74c3c;">@ViewBag.Chyba</div>
+    }
+
     <form method="post" asp-controller="User" asp-action="Login" id="loginForm">
         <div class="form-group">
             <label for="email">E-mail</label>
@@ -25,6 +30,9 @@
         <input type="hidden" id="heslo" name="heslo" />
         <button type="submit">Přihlásit se</button>
     </form>
+
+    <p class="link">Nemáte účet? <a href="/User/Register">Zaregistrujte se</a></p>
+</div>
 
 @section Scripts {
     <script>
@@ -41,6 +49,3 @@
         });
     </script>
 }
-
-    <p class="link">Nemáte účet? <a href="/User/Register">Zaregistrujte se</a></p>
-</div>

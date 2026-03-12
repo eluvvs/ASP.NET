@@ -11,49 +11,12 @@
 
     <div class="profil-info">
         <div class="profil-polozka">
-            <strong>Jméno:</strong> @ViewBag.Jmeno
-        </div>
-        <div class="profil-polozka">
-            <strong>E-mail:</strong> @ViewBag.Email
+            <strong>E-mail:</strong> @ViewBag.MaskedEmail
         </div>
         <div class="profil-polozka">
             <strong>Členem od:</strong> 4. března 2026
         </div>
     </div>
 
-    @if (ViewBag.Odhaleno != true)
-    {
-        <form method="post" asp-controller="User" asp-action="Profil" id="revealForm" style="margin-top:20px; border-top: 1px solid rgba(255,255,255,0.06); padding-top:20px;">
-            <p style="font-size:13px; color:#b0bac9; margin-bottom:8px;">Zadejte heslo pro zobrazení celého e-mailu:</p>
-            @if (ViewBag.ChybaHesla != null) {
-                <div class="zprava" style="background: rgba(231, 76, 60, 0.15); border-color: rgba(231, 76, 60, 0.3); color: #e74c3c;">@ViewBag.ChybaHesla</div>
-            }
-            <div class="form-group" style="display:flex; gap:10px; margin-bottom:0;">
-                <input type="password" id="revealInput" placeholder="Vaše heslo" required style="flex:1; margin-bottom: 0;" />
-                <input type="hidden" id="hesloProOdhaleni" name="hesloProOdhaleni" />
-                <button type="submit" style="width:auto; margin:0; padding:10px 15px;">Odhalit</button>
-            </div>
-        </form>
-    }
-
     <a href="/User/Odhlasit" class="btn-odhlasit" style="margin-top:25px;">Odhlásit se</a>
 </div>
-
-@section Scripts {
-    <script>
-        var revealForm = document.getElementById('revealForm');
-        if (revealForm) {
-            revealForm.addEventListener('submit', async function(e) {
-                e.preventDefault();
-                const raw = document.getElementById('revealInput').value;
-                const encoded = new TextEncoder().encode(raw);
-                const hashBuffer = await crypto.subtle.digest('SHA-256', encoded);
-                const hashArray = Array.from(new Uint8Array(hashBuffer));
-                const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-                document.getElementById('hesloProOdhaleni').value = hashHex;
-                document.getElementById('revealInput').value = '';
-                this.submit();
-            });
-        }
-    </script>
-}

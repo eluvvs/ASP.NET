@@ -2,6 +2,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddSingleton<ASP.NET_MWC.Services.UserStore>();
 
 // Session — pro sledování přihlášení
 builder.Services.AddSession(options =>

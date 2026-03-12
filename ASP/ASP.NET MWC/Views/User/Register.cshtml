@@ -6,12 +6,12 @@
     <h1>Registrace</h1>
     <p>Vytvořte si nový účet.</p>
 
-    <form method="post" asp-controller="User" asp-action="Register" id="registerForm">
-        <div class="form-group">
-            <label for="jmeno">Jméno</label>
-            <input type="text" id="jmeno" name="jmeno" placeholder="Zadejte své jméno" required />
-        </div>
+    @if (ViewBag.Chyba != null)
+    {
+        <div class="zprava" style="background: rgba(231, 76, 60, 0.15); border-color: rgba(231, 76, 60, 0.3); color: #e74c3c;">@ViewBag.Chyba</div>
+    }
 
+    <form method="post" asp-controller="User" asp-action="Register" id="registerForm">
         <div class="form-group">
             <label for="email">E-mail</label>
             <input type="email" id="email" name="email" placeholder="vas@email.cz" required />
@@ -25,6 +25,9 @@
         <input type="hidden" id="heslo" name="heslo" />
         <button type="submit">Zaregistrovat se</button>
     </form>
+
+    <p class="link">Už máte účet? <a href="/User/Login">Přihlaste se</a></p>
+</div>
 
 @section Scripts {
     <script>
@@ -41,6 +44,3 @@
         });
     </script>
 }
-
-    <p class="link">Už máte účet? <a href="/User/Login">Přihlaste se</a></p>
-</div>

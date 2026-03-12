@@ -1,131 +1,98 @@
+using ASP.NET_MWC.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ASP.NET_MWC.Controllers
 {
     public class UserController : Controller
     {
+        private readonly UserStore _store;
+
+        public UserController(UserStore store) => _store = store;
+
         // GET: /User/Register
-        public IActionResult Register()
-        {
-            return View();
-        }
+        public IActionResult Register() => View();
 
         // POST: /User/Register
         [HttpPost]
-        public IActionResult Register(string jmeno, string email, string heslo)
+        public IActionResult Register(string email, string heslo)
         {
-            // Tady by normálně bylo uložení do databáze
-            // Pro teď jen přesměrujeme na přihlášení
+            if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(heslo))
+            {
+                ViewBag.Chyba = "Vyplňte všechna pole.";
+                return View();
+            }
+
+            if (!_store.Register(email, heslo))
+            {
+                ViewBag.Chyba = "Účet s tímto e-mailem již existuje.";
+                return View();
+            }
+
             TempData["Zprava"] = "Registrace proběhla úspěšně! Nyní se přihlaste.";
             return RedirectToAction("Login");
         }
 
         // GET: /User/Login
-        public IActionResult Login()
-        {
-            return View();
-        }
+        public IActionResult Login() => View();
 
         // POST: /User/Login
         [HttpPost]
         public IActionResult Login(string email, string heslo)
         {
+            if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(heslo))
+            {
+                ViewBag.Chyba = "Vyplňte všechna pole.";
+                return View();
+            }
+
             // heslo arrives already SHA-256 hashed from the client
-            // Tady by normálně bylo ověření proti databázi
+            if (!_store.Validate(email, heslo))
+            {
+                ViewBag.Chyba = "Nesprávný e-mail nebo heslo.";
+                return View();
+            }
+
             HttpContext.Session.SetString("Prihlasen", "true");
-            HttpContext.Session.SetString("UserJmeno", "Jan Novák");
             HttpContext.Session.SetString("UserEmail", email);
-            if (!string.IsNullOrEmpty(heslo)) HttpContext.Session.SetString("UserHesloHash", heslo);
+            HttpContext.Session.SetString("UserHesloHash", heslo);
             return RedirectToAction("Profil");
         }
 
         // GET: /User/Profil
-        [HttpGet]
         public IActionResult Profil()
         {
-            return ProfilDetailLogic(null);
-        }
-
-        // POST: /User/Profil
-        [HttpPost]
-        public IActionResult Profil(string hesloProOdhaleni)
-        {
-            return ProfilDetailLogic(hesloProOdhaleni);
-        }
-
-        private IActionResult ProfilDetailLogic(string hesloProOdhaleni)
-        {
-            // Kontrola přihlášení
             if (HttpContext.Session.GetString("Prihlasen") != "true")
-            {
                 return RedirectToAction("Login");
-            }
 
-            ViewBag.Jmeno = HttpContext.Session.GetString("UserJmeno");
-            string originalEmail = HttpContext.Session.GetString("UserEmail") ?? "";
-
-            // Odhalení e-mailu pomocí hesla (hesloProOdhaleni arrives SHA-256 hashed)
-            if (!string.IsNullOrEmpty(hesloProOdhaleni))
-            {
-                if (hesloProOdhaleni == HttpContext.Session.GetString("UserHesloHash"))
-                {
-                    ViewBag.Email = originalEmail;
-                    ViewBag.Odhaleno = true;
-                    return View();
-                }
-                else
-                {
-                    ViewBag.ChybaHesla = "Nesprávné heslo! Údaje zůstávají skryty.";
-                }
-            }
-
-            // Maskování e-mailu (jak před @ tak i po @)
-            string maskedEmail = originalEmail;
-            int atIndex = originalEmail.IndexOf('@');
-            if (atIndex > 1)
-            {
-                string namePart = originalEmail.Substring(0, atIndex);
-                string domainPart = originalEmail.Substring(atIndex + 1); // bez @
-                
-                // Mask name
-                if (namePart.Length <= 2)
-                    namePart = new string('*', namePart.Length);
-                else
-                    namePart = namePart[0] + "***" + namePart[namePart.Length - 1];
-
-                // Mask domain
-                int dotIndex = domainPart.LastIndexOf('.');
-                if (dotIndex > 0)
-                {
-                    string domainName = domainPart.Substring(0, dotIndex);
-                    string extension = domainPart.Substring(dotIndex);
-                    
-                    if (domainName.Length <= 2)
-                        domainName = new string('*', domainName.Length);
-                    else
-                        domainName = domainName[0] + "***" + domainName[domainName.Length - 1];
-                        
-                    domainPart = domainName + extension;
-                }
-                else
-                {
-                    domainPart = "***";
-                }
-
-                maskedEmail = namePart + "@" + domainPart;
-            }
-            else if (atIndex == 1)
-            {
-                maskedEmail = "*@" + originalEmail.Substring(atIndex + 1);
-            }
-            else if (originalEmail.Length > 2)
-            {
-                maskedEmail = "***" + originalEmail.Substring(originalEmail.Length - 2);
-            }
-
-            ViewBag.Email = maskedEmail;
-            ViewBag.Odhaleno = false;
+            var email = HttpContext.Session.GetString("UserEmail") ?? "";
+            ViewBag.MaskedEmail = MaskEmail(email);
             return View();
+        }
+
+        private static string MaskEmail(string email)
+        {
+            int at = email.IndexOf('@');
+            if (at < 1) return "***";
+
+            string name = email[..at];
+            string domain = email[(at + 1)..];
+
+            // Mask name part: keep first and last char
+            name = name.Length <= 2
+                ? new string('*', name.Length)
+                : $"{name[0]}***{name[^1]}";
+
+            // Mask domain part (before last dot)
+            int dot = domain.LastIndexOf('.');
+            if (dot > 0)
+            {
+                string d = domain[..dot];
+                string ext = domain[dot..];
+                d = d.Length <= 2 ? new string('*', d.Length) : $"{d[0]}***{d[^1]}";
+                domain = d + ext;
+            }
+
+            return $"{name}@{domain}";
         }
 
         // GET: /User/Odhlasit
