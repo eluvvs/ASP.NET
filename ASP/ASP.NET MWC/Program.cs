@@ -1,8 +1,16 @@
+using ASP.NET_MWC.Models;
+using ASP.NET_MWC.Services;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddSingleton<ASP.NET_MWC.Services.UserStore>();
+
+builder.Services.AddDbContext<AppDbContext>(options => 
+    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddScoped<UserStore>();
 
 // Session — pro sledování přihlášení
 builder.Services.AddSession(options =>
