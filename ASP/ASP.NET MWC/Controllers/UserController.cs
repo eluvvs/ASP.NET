@@ -14,17 +14,17 @@ namespace ASP.NET_MWC.Controllers
 
         // POST: /User/Register
         [HttpPost]
-        public IActionResult Register(string email, string heslo)
+        public IActionResult Register(string username, string heslo)
         {
-            if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(heslo))
+            if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(heslo))
             {
                 ViewBag.Chyba = "Vyplňte všechna pole.";
                 return View();
             }
 
-            if (!_store.Register(email, heslo))
+            if (!_store.Register(username, heslo))
             {
-                ViewBag.Chyba = "Účet s tímto e-mailem již existuje.";
+                ViewBag.Chyba = "Účet s tímto jménem již existuje.";
                 return View();
             }
 
@@ -37,23 +37,23 @@ namespace ASP.NET_MWC.Controllers
 
         // POST: /User/Login
         [HttpPost]
-        public IActionResult Login(string email, string heslo)
+        public IActionResult Login(string username, string heslo)
         {
-            if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(heslo))
+            if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(heslo))
             {
                 ViewBag.Chyba = "Vyplňte všechna pole.";
                 return View();
             }
 
             // heslo arrives already SHA-256 hashed from the client
-            if (!_store.Validate(email, heslo))
+            if (!_store.Validate(username, heslo))
             {
-                ViewBag.Chyba = "Nesprávný e-mail nebo heslo.";
+                ViewBag.Chyba = "Nesprávné uživatelské jméno nebo heslo.";
                 return View();
             }
 
             HttpContext.Session.SetString("Prihlasen", "true");
-            HttpContext.Session.SetString("UserEmail", email);
+            HttpContext.Session.SetString("UserName", username);
             HttpContext.Session.SetString("UserHesloHash", heslo);
             return RedirectToAction("Profil");
         }
@@ -64,35 +64,9 @@ namespace ASP.NET_MWC.Controllers
             if (HttpContext.Session.GetString("Prihlasen") != "true")
                 return RedirectToAction("Login");
 
-            var email = HttpContext.Session.GetString("UserEmail") ?? "";
-            ViewBag.MaskedEmail = MaskEmail(email);
+            var username = HttpContext.Session.GetString("UserName") ?? "";
+            ViewBag.UserName = username;
             return View();
-        }
-
-        private static string MaskEmail(string email)
-        {
-            int at = email.IndexOf('@');
-            if (at < 1) return "***";
-
-            string name = email[..at];
-            string domain = email[(at + 1)..];
-
-            // Mask name part: keep first and last char
-            name = name.Length <= 2
-                ? new string('*', name.Length)
-                : $"{name[0]}***{name[^1]}";
-
-            // Mask domain part (before last dot)
-            int dot = domain.LastIndexOf('.');
-            if (dot > 0)
-            {
-                string d = domain[..dot];
-                string ext = domain[dot..];
-                d = d.Length <= 2 ? new string('*', d.Length) : $"{d[0]}***{d[^1]}";
-                domain = d + ext;
-            }
-
-            return $"{name}@{domain}";
         }
 
         // GET: /User/Odhlasit

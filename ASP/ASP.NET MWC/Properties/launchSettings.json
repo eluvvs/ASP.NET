@@ -1,4 +1,4 @@
-﻿{
+{
   "$schema": "https://json.schemastore.org/launchsettings.json",
   "profiles": {
     "http": {
@@ -8,9 +8,9 @@
       "applicationUrl": "http://localhost:5062",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "DOTNET_WATCH_BROWSER_REFRESH": "false",
-        "__ASPNETCORE_BROWSER_TOOLS": "false",
-        "ASPNETCORE_BROWSER_REFRESH": "false"
+        "DOTNET_WATCH_BROWSER_REFRESH": "true",
+        "__ASPNETCORE_BROWSER_TOOLS": "true",
+        "ASPNETCORE_BROWSER_REFRESH": "true"
       }
     }
   }

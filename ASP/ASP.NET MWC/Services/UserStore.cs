@@ -13,21 +13,21 @@ namespace ASP.NET_MWC.Services
 
         // --- public API ---
 
-        public bool Exists(string email)
-            => _context.Users.Any(u => u.Email.ToLower() == email.ToLower());
+        public bool Exists(string username)
+            => _context.Users.Any(u => u.Username.ToLower() == username.ToLower());
 
-        public bool Register(string email, string passwordHash)
+        public bool Register(string username, string passwordHash)
         {
-            if (Exists(email)) return false;
+            if (Exists(username)) return false;
 
-            _context.Users.Add(new User { Email = email, PasswordHash = passwordHash });
+            _context.Users.Add(new User { Username = username, PasswordHash = passwordHash });
             _context.SaveChanges();
             return true;
         }
 
-        public bool Validate(string email, string passwordHash)
+        public bool Validate(string username, string passwordHash)
             => _context.Users.Any(u =>
-                u.Email.ToLower() == email.ToLower()
+                u.Username.ToLower() == username.ToLower()
                 && u.PasswordHash == passwordHash);
     }
 }
