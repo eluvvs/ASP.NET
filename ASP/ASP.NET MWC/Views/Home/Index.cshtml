@@ -1,4 +1,4 @@
-﻿@{
+@{
     ViewData["Title"] = "Rainbow Six Siege";
 }
 
@@ -42,4 +42,6 @@
             <p>Zdroj: shrnuto z veřejného článku na Fandom (Rainbow Six Wiki). Další stránky o operátorech, mapách a
                 detailech přidám později.</p>
         </footer>
+
+        @await Html.PartialAsync("_CommentsAndNotes")
     </main>

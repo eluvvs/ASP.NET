@@ -1,0 +1,94 @@
+@{
+    var pageKey = (string)ViewBag.PageKey;
+    var comments = (List<Comment>)ViewBag.Comments;
+    var notes = (List<Note>)ViewBag.Notes;
+    bool isLoggedIn = (bool)ViewBag.IsLoggedIn;
+    var currentUser = (string)ViewBag.CurrentUser;
+    var returnUrl = Context.Request.Path + Context.Request.QueryString;
+}
+
+@if (isLoggedIn)
+{
+    <section class="interaction-section" id="notes-section">
+        <h2>📝 Poznámky</h2>
+        <form method="post" action="/Comment/AddNote" class="interaction-form">
+            <input type="hidden" name="pageKey" value="@pageKey" />
+            <input type="hidden" name="returnUrl" value="@returnUrl" />
+            <textarea name="content" placeholder="Napište poznámku ke článku…" rows="3" required maxlength="2000"></textarea>
+            <button type="submit">Přidat poznámku</button>
+        </form>
+
+        @if (notes.Any())
+        {
+            <div class="interaction-list">
+                @foreach (var note in notes)
+                {
+                    <div class="interaction-card note-card">
+                        <div class="interaction-header">
+                            <span class="interaction-user">@note.Username</span>
+                            <span class="interaction-date">@note.CreatedAt.ToString("dd.MM.yyyy HH:mm")</span>
+                        </div>
+                        <p class="interaction-content">@note.Content</p>
+                        @if (note.Username == currentUser)
+                        {
+                            <form method="post" action="/Comment/DeleteNote" class="delete-form">
+                                <input type="hidden" name="id" value="@note.Id" />
+                                <input type="hidden" name="returnUrl" value="@returnUrl" />
+                                <button type="submit" class="btn-delete" title="Smazat">✕</button>
+                            </form>
+                        }
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <p class="empty-hint">Zatím žádné poznámky.</p>
+        }
+    </section>
+
+    <section class="interaction-section" id="comments-section">
+        <h2>💬 Komentáře</h2>
+        <form method="post" action="/Comment/AddComment" class="interaction-form">
+            <input type="hidden" name="pageKey" value="@pageKey" />
+            <input type="hidden" name="returnUrl" value="@returnUrl" />
+            <textarea name="content" placeholder="Napište komentář…" rows="3" required maxlength="2000"></textarea>
+            <button type="submit">Přidat komentář</button>
+        </form>
+
+        @if (comments.Any())
+        {
+            <div class="interaction-list">
+                @foreach (var comment in comments)
+                {
+                    <div class="interaction-card comment-card">
+                        <div class="interaction-header">
+                            <span class="interaction-user">@comment.Username</span>
+                            <span class="interaction-date">@comment.CreatedAt.ToString("dd.MM.yyyy HH:mm")</span>
+                        </div>
+                        <p class="interaction-content">@comment.Content</p>
+                        @if (comment.Username == currentUser)
+                        {
+                            <form method="post" action="/Comment/DeleteComment" class="delete-form">
+                                <input type="hidden" name="id" value="@comment.Id" />
+                                <input type="hidden" name="returnUrl" value="@returnUrl" />
+                                <button type="submit" class="btn-delete" title="Smazat">✕</button>
+                            </form>
+                        }
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <p class="empty-hint">Zatím žádné komentáře. Buďte první!</p>
+        }
+    </section>
+}
+else
+{
+    <section class="interaction-section interaction-locked" id="login-prompt">
+        <div class="lock-icon">🔒</div>
+        <p><a href="/User/Login">Přihlaste se</a> pro zobrazení a přidávání poznámek a komentářů.</p>
+    </section>
+}

@@ -873,3 +873,245 @@ body.fancy-ui .btn-odhlasit:hover::before {
   opacity: 1;
   /* Ignite the interactive cursor tracking torchlight! */
 }
+
+/* ===================================================================
+   COMMENTS, NOTES & INTERACTION SECTIONS
+   =================================================================== */
+.interaction-section {
+  max-width: 860px;
+  margin: 40px auto;
+  padding: 28px;
+  background: rgba(15, 20, 36, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.interaction-section h2 {
+  margin: 0 0 18px;
+  font-size: 20px;
+  color: #dbe7ff;
+}
+
+/* Locked / login-prompt state */
+.interaction-locked {
+  text-align: center;
+  padding: 40px 28px;
+}
+
+.interaction-locked .lock-icon {
+  font-size: 32px;
+  margin-bottom: 10px;
+  opacity: 0.6;
+}
+
+.interaction-locked p {
+  color: #8893a7;
+  font-size: 14px;
+}
+
+.interaction-locked a {
+  color: #6a9ef0;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.interaction-locked a:hover {
+  text-decoration: underline;
+}
+
+/* Form inside interaction sections */
+.interaction-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.interaction-form textarea {
+  width: 100%;
+  padding: 12px 14px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: #eee;
+  font-size: 14px;
+  font-family: inherit;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+  box-sizing: border-box;
+}
+
+.interaction-form textarea::placeholder {
+  color: #556;
+}
+
+.interaction-form textarea:focus {
+  border-color: rgba(100, 140, 220, 0.5);
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 0 3px rgba(100, 140, 220, 0.12);
+}
+
+.interaction-form button {
+  align-self: flex-end;
+  padding: 9px 22px;
+  background: #3a6fd8;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+}
+
+.interaction-form button:hover {
+  background: #2f5cb8;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(58, 111, 216, 0.35);
+}
+
+.interaction-form button:active {
+  transform: translateY(0);
+}
+
+/* List of cards */
+.interaction-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Individual card */
+.interaction-card {
+  position: relative;
+  padding: 14px 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.interaction-card:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.12);
+  transform: translateY(-1px);
+}
+
+/* Accent strip on the left */
+.comment-card {
+  border-left: 3px solid rgba(100, 140, 220, 0.5);
+}
+
+.note-card {
+  border-left: 3px solid rgba(245, 180, 60, 0.5);
+}
+
+.private-note-card {
+  border-left: 3px solid rgba(160, 100, 220, 0.5);
+}
+
+/* Header row */
+.interaction-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.interaction-user {
+  font-weight: 600;
+  font-size: 13px;
+  color: #b0bac9;
+  letter-spacing: 0.3px;
+}
+
+.interaction-date {
+  font-size: 12px;
+  color: #556;
+}
+
+/* Content text */
+.interaction-content {
+  margin: 0;
+  color: #d0d7e6;
+  font-size: 14px;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* Delete button */
+.delete-form {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.btn-delete {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: rgba(192, 57, 43, 0.15);
+  color: #e76f6f;
+  font-size: 13px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s ease, background 0.2s ease, transform 0.15s ease;
+}
+
+.interaction-card:hover .btn-delete {
+  opacity: 1;
+}
+
+.btn-delete:hover {
+  background: rgba(192, 57, 43, 0.35);
+  transform: scale(1.15);
+}
+
+/* Empty state hint */
+.empty-hint {
+  color: #556;
+  font-size: 13px;
+  text-align: center;
+  padding: 12px 0;
+  margin: 0;
+}
+
+/* ===================================================================
+   PRIVATE NOTES — profile page
+   =================================================================== */
+.private-notes-section {
+  margin-top: 20px;
+}
+
+.private-notes-section h2 {
+  margin: 0 0 6px;
+  font-size: 20px;
+  color: #dbe7ff;
+}
+
+.private-notes-hint {
+  color: #667;
+  font-size: 13px;
+  margin: 0 0 18px;
+}
+
+/* Responsive */
+@media (max-width: 520px) {
+  .interaction-section {
+    margin: 24px 10px;
+    padding: 18px 14px;
+  }
+
+  .interaction-form button {
+    align-self: stretch;
+  }
+}

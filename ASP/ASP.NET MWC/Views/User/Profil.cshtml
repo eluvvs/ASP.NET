@@ -1,5 +1,6 @@
 @{
     ViewData["Title"] = "Profil";
+    var privateNotes = (List<PrivateNote>)ViewBag.PrivateNotes;
 }
 
 <div class="user-page">
@@ -19,4 +20,38 @@
     </div>
 
     <a href="/User/Odhlasit" class="btn-odhlasit" style="margin-top:25px;">Odhlásit se</a>
+</div>
+
+<!-- Private Notes Section -->
+<div class="user-page private-notes-section">
+    <h2>🔐 Soukromé poznámky</h2>
+    <p class="private-notes-hint">Tyto poznámky vidíte pouze vy.</p>
+
+    <form method="post" action="/Comment/AddPrivateNote" class="interaction-form">
+        <textarea name="content" placeholder="Napište soukromou poznámku…" rows="3" required maxlength="2000"></textarea>
+        <button type="submit">Přidat poznámku</button>
+    </form>
+
+    @if (privateNotes.Any())
+    {
+        <div class="interaction-list">
+            @foreach (var note in privateNotes)
+            {
+                <div class="interaction-card private-note-card">
+                    <div class="interaction-header">
+                        <span class="interaction-date">@note.CreatedAt.ToString("dd.MM.yyyy HH:mm")</span>
+                    </div>
+                    <p class="interaction-content">@note.Content</p>
+                    <form method="post" action="/Comment/DeletePrivateNote" class="delete-form">
+                        <input type="hidden" name="id" value="@note.Id" />
+                        <button type="submit" class="btn-delete" title="Smazat">✕</button>
+                    </form>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <p class="empty-hint">Zatím žádné soukromé poznámky.</p>
+    }
 </div>

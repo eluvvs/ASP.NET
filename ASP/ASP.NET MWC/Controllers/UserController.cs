@@ -1,3 +1,4 @@
+using ASP.NET_MWC.Models;
 using ASP.NET_MWC.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,8 +7,13 @@ namespace ASP.NET_MWC.Controllers
     public class UserController : Controller
     {
         private readonly UserStore _store;
+        private readonly AppDbContext _db;
 
-        public UserController(UserStore store) => _store = store;
+        public UserController(UserStore store, AppDbContext db)
+        {
+            _store = store;
+            _db = db;
+        }
 
         // GET: /User/Register
         public IActionResult Register() => View();
@@ -73,6 +79,10 @@ namespace ASP.NET_MWC.Controllers
 
             var username = HttpContext.Session.GetString("UserName") ?? "";
             ViewBag.UserName = username;
+            ViewBag.PrivateNotes = _db.PrivateNotes
+                .Where(n => n.Username == username)
+                .OrderByDescending(n => n.CreatedAt)
+                .ToList();
             return View();
         }
 
