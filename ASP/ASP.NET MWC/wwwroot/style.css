@@ -901,9 +901,26 @@ body.fancy-ui .btn-odhlasit:hover::before {
 }
 
 .interaction-locked .lock-icon {
-  font-size: 32px;
-  margin-bottom: 10px;
-  opacity: 0.6;
+  display: inline-block;
+  width: 24px;
+  height: 20px;
+  margin-bottom: 14px;
+  position: relative;
+  background: #556;
+  border-radius: 3px;
+}
+
+.interaction-locked .lock-icon::before {
+  content: "";
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 14px;
+  height: 14px;
+  border: 3px solid #556;
+  border-radius: 50% 50% 0 0;
+  border-bottom: none;
 }
 
 .interaction-locked p {

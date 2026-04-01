@@ -10,7 +10,7 @@
 @if (isLoggedIn)
 {
     <section class="interaction-section" id="notes-section">
-        <h2>📝 Poznámky</h2>
+        <h2>Poznámky</h2>
         <form method="post" action="/Comment/AddNote" class="interaction-form">
             <input type="hidden" name="pageKey" value="@pageKey" />
             <input type="hidden" name="returnUrl" value="@returnUrl" />
@@ -48,7 +48,7 @@
     </section>
 
     <section class="interaction-section" id="comments-section">
-        <h2>💬 Komentáře</h2>
+        <h2>Komentáře</h2>
         <form method="post" action="/Comment/AddComment" class="interaction-form">
             <input type="hidden" name="pageKey" value="@pageKey" />
             <input type="hidden" name="returnUrl" value="@returnUrl" />
@@ -88,7 +88,7 @@
 else
 {
     <section class="interaction-section interaction-locked" id="login-prompt">
-        <div class="lock-icon">🔒</div>
+        <div class="lock-icon"></div>
         <p><a href="/User/Login">Přihlaste se</a> pro zobrazení a přidávání poznámek a komentářů.</p>
     </section>
 }
