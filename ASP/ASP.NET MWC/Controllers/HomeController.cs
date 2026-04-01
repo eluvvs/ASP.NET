@@ -12,17 +12,18 @@ namespace ASP.NET_MWC.Controllers
 
         private void LoadPageData(string pageKey)
         {
+            var username = HttpContext.Session.GetString("UserName") ?? "";
             ViewBag.PageKey = pageKey;
             ViewBag.Comments = _db.Comments
                 .Where(c => c.PageKey == pageKey)
                 .OrderByDescending(c => c.CreatedAt)
                 .ToList();
             ViewBag.Notes = _db.Notes
-                .Where(n => n.PageKey == pageKey)
+                .Where(n => n.PageKey == pageKey && n.Username == username)
                 .OrderByDescending(n => n.CreatedAt)
                 .ToList();
             ViewBag.IsLoggedIn = HttpContext.Session.GetString("Prihlasen") == "true";
-            ViewBag.CurrentUser = HttpContext.Session.GetString("UserName") ?? "";
+            ViewBag.CurrentUser = username;
         }
 
         public IActionResult Index()

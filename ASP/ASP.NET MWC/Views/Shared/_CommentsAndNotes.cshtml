@@ -9,44 +9,63 @@
 
 @if (isLoggedIn)
 {
-    <section class="interaction-section" id="notes-section">
-        <h2>Poznámky</h2>
-        <form method="post" action="/Comment/AddNote" class="interaction-form">
-            <input type="hidden" name="pageKey" value="@pageKey" />
-            <input type="hidden" name="returnUrl" value="@returnUrl" />
-            <textarea name="content" placeholder="Napište poznámku ke článku…" rows="3" required maxlength="2000"></textarea>
-            <button type="submit">Přidat poznámku</button>
-        </form>
-
+    <!-- Floating Notes Button (bottom-right) -->
+    <button class="notes-fab" id="notes-fab" title="Moje poznámky" onclick="document.getElementById('notes-panel').classList.toggle('open')">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/>
+            <line x1="16" y1="17" x2="8" y2="17"/>
+            <polyline points="10 9 9 9 8 9"/>
+        </svg>
         @if (notes.Any())
         {
-            <div class="interaction-list">
-                @foreach (var note in notes)
+            <span class="notes-fab-badge">@notes.Count</span>
+        }
+    </button>
+
+    <!-- Notes Overlay Panel -->
+    <div class="notes-overlay" id="notes-panel">
+        <div class="notes-panel-backdrop" onclick="document.getElementById('notes-panel').classList.remove('open')"></div>
+        <div class="notes-panel-content">
+            <div class="notes-panel-header">
+                <h3>Moje poznámky</h3>
+                <button class="notes-panel-close" onclick="document.getElementById('notes-panel').classList.remove('open')" title="Zavřít">✕</button>
+            </div>
+            <p class="notes-panel-hint">Soukromé poznámky k tomuto článku — vidíte je jen vy.</p>
+
+            <form method="post" action="/Comment/AddNote" class="notes-panel-form">
+                <input type="hidden" name="pageKey" value="@pageKey" />
+                <input type="hidden" name="returnUrl" value="@returnUrl" />
+                <textarea name="content" placeholder="Napište poznámku…" rows="2" required maxlength="2000"></textarea>
+                <button type="submit">Přidat</button>
+            </form>
+
+            <div class="notes-panel-list">
+                @if (notes.Any())
                 {
-                    <div class="interaction-card note-card">
-                        <div class="interaction-header">
-                            <span class="interaction-user">@note.Username</span>
-                            <span class="interaction-date">@note.CreatedAt.ToString("dd.MM.yyyy HH:mm")</span>
-                        </div>
-                        <p class="interaction-content">@note.Content</p>
-                        @if (note.Username == currentUser)
-                        {
+                    @foreach (var note in notes)
+                    {
+                        <div class="notes-panel-item">
+                            <span class="notes-panel-date">@note.CreatedAt.ToString("dd.MM.yyyy HH:mm")</span>
+                            <p>@note.Content</p>
                             <form method="post" action="/Comment/DeleteNote" class="delete-form">
                                 <input type="hidden" name="id" value="@note.Id" />
                                 <input type="hidden" name="returnUrl" value="@returnUrl" />
                                 <button type="submit" class="btn-delete" title="Smazat">✕</button>
                             </form>
-                        }
-                    </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p class="empty-hint">Zatím žádné poznámky.</p>
                 }
             </div>
-        }
-        else
-        {
-            <p class="empty-hint">Zatím žádné poznámky.</p>
-        }
-    </section>
+        </div>
+    </div>
 
+    <!-- Comments Section (stays under article) -->
     <section class="interaction-section" id="comments-section">
         <h2>Komentáře</h2>
         <form method="post" action="/Comment/AddComment" class="interaction-form">
@@ -89,6 +108,6 @@ else
 {
     <section class="interaction-section interaction-locked" id="login-prompt">
         <div class="lock-icon"></div>
-        <p><a href="/User/Login">Přihlaste se</a> pro zobrazení a přidávání poznámek a komentářů.</p>
+        <p><a href="/User/Login">Přihlaste se</a> pro zobrazení a přidávání komentářů.</p>
     </section>
 }
