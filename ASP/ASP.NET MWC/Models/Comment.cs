@@ -14,6 +14,9 @@ namespace ASP.NET_MWC.Models
 
         public string Content { get; set; } = string.Empty;
 
+        /// <summary>Relative path to the uploaded comment image (inside wwwroot/uploads/comments). Null if no image.</summary>
+        public string? ImagePath { get; set; }
+
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }

@@ -1096,6 +1096,133 @@ body.fancy-ui .btn-odhlasit:hover::before {
 }
 
 /* ===================================================================
+   COMMENT IMAGE UPLOAD & DISPLAY
+   =================================================================== */
+
+/* Form actions row — upload button + submit button */
+.comment-form-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.comment-form-actions button[type="submit"] {
+  margin-left: auto;
+}
+
+/* Hidden real file input */
+.comment-image-input {
+  position: absolute;
+  width: 0;
+  height: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Custom upload label styled as a button */
+.comment-image-upload {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  color: #8893a7;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  user-select: none;
+}
+
+.comment-image-upload:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(100, 140, 220, 0.4);
+  color: #b0bac9;
+}
+
+.comment-image-upload svg {
+  flex-shrink: 0;
+}
+
+/* Selected filename display */
+.comment-image-name {
+  font-size: 12px;
+  color: #6a9ef0;
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ---- Displayed image in comment card ---- */
+.comment-image-wrapper {
+  position: relative;
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+/* Open in new tab link — sits above the image */
+.comment-image-newtab {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  background: rgba(100, 140, 220, 0.1);
+  border: 1px solid rgba(100, 140, 220, 0.2);
+  border-radius: 5px;
+  color: #6a9ef0;
+  font-size: 11px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.15s ease;
+}
+
+.comment-image-newtab:hover {
+  background: rgba(100, 140, 220, 0.2);
+  border-color: rgba(100, 140, 220, 0.45);
+  color: #91b8f8;
+  transform: translateY(-1px);
+}
+
+.comment-image-newtab svg {
+  flex-shrink: 0;
+}
+
+/* Thumbnail image — small by default */
+.comment-image-thumb {
+  display: block;
+  max-width: 200px;
+  max-height: 120px;
+  object-fit: contain;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+  transition: max-width 0.4s cubic-bezier(0.25, 1, 0.5, 1),
+              max-height 0.4s cubic-bezier(0.25, 1, 0.5, 1),
+              border-color 0.25s ease,
+              box-shadow 0.25s ease;
+}
+
+.comment-image-thumb:hover {
+  border-color: rgba(100, 140, 220, 0.35);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Expanded state — medium size, not full screen */
+.comment-image-thumb.comment-image-expanded {
+  max-width: 520px;
+  max-height: 420px;
+  object-fit: contain;
+  border-color: rgba(100, 140, 220, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(100, 140, 220, 0.15);
+}
+
+/* ===================================================================
    FLOATING NOTES BUTTON (FAB)
    =================================================================== */
 .notes-fab {

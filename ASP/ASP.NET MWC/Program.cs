@@ -44,6 +44,7 @@ app.MapControllerRoute(
     pattern: "bomb.html",
     defaults: new { controller = "Home", action = "Bomb" });
 
+app.UseStaticFiles(); // serve dynamically-uploaded files (comment images, etc.)
 app.MapStaticAssets();
 
 app.MapControllerRoute(

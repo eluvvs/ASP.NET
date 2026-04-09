@@ -68,11 +68,23 @@
     <!-- Comments Section (stays under article) -->
     <section class="interaction-section" id="comments-section">
         <h2>Komentáře</h2>
-        <form method="post" action="/Comment/AddComment" class="interaction-form">
+        <form method="post" action="/Comment/AddComment" class="interaction-form" enctype="multipart/form-data">
             <input type="hidden" name="pageKey" value="@pageKey" />
             <input type="hidden" name="returnUrl" value="@returnUrl" />
             <textarea name="content" placeholder="Napište komentář…" rows="3" required maxlength="2000"></textarea>
-            <button type="submit">Přidat komentář</button>
+            <div class="comment-form-actions">
+                <label class="comment-image-upload" title="Přiložit obrázek (max 5 MB)">
+                    <input type="file" name="image" accept=".jpg,.jpeg,.png,.gif,.webp,.bmp" class="comment-image-input" />
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                        <circle cx="8.5" cy="8.5" r="1.5"/>
+                        <polyline points="21 15 16 10 5 21"/>
+                    </svg>
+                    <span class="comment-image-label">Obrázek</span>
+                </label>
+                <span class="comment-image-name"></span>
+                <button type="submit">Přidat komentář</button>
+            </div>
         </form>
 
         @if (comments.Any())
@@ -86,6 +98,23 @@
                             <span class="interaction-date">@comment.CreatedAt.ToString("dd.MM.yyyy HH:mm")</span>
                         </div>
                         <p class="interaction-content">@comment.Content</p>
+                        @if (!string.IsNullOrEmpty(comment.ImagePath))
+                        {
+                            <div class="comment-image-wrapper">
+                                <a href="/uploads/comments/@comment.ImagePath" target="_blank" rel="noopener" class="comment-image-newtab" title="Otevřít v nové záložce">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                                        <polyline points="15 3 21 3 21 9"/>
+                                        <line x1="10" y1="14" x2="21" y2="3"/>
+                                    </svg>
+                                    Otevřít originál
+                                </a>
+                                <img src="/uploads/comments/@comment.ImagePath"
+                                     alt="Příloha komentáře"
+                                     class="comment-image-thumb"
+                                     onclick="this.classList.toggle('comment-image-expanded')" />
+                            </div>
+                        }
                         @if (comment.Username == currentUser)
                         {
                             <form method="post" action="/Comment/DeleteComment" class="delete-form">
@@ -111,3 +140,17 @@ else
         <p><a href="/User/Login">Přihlaste se</a> pro zobrazení a přidávání komentářů.</p>
     </section>
 }
+
+<script>
+// Show selected image filename next to the upload button
+document.querySelectorAll('.comment-image-input').forEach(function(input) {
+    input.addEventListener('change', function() {
+        var nameSpan = this.closest('.comment-form-actions').querySelector('.comment-image-name');
+        if (this.files && this.files.length > 0) {
+            nameSpan.textContent = this.files[0].name;
+        } else {
+            nameSpan.textContent = '';
+        }
+    });
+});
+</script>

@@ -30,6 +30,9 @@ namespace ASP.NET_MWC.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("ImagePath")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("PageKey")
                         .IsRequired()
                         .HasColumnType("TEXT");
